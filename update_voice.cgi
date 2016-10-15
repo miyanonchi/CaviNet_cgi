@@ -38,6 +38,7 @@ if ($filename =~ /.+\.(.+)/) {
     exit;
 }
 
+=pod # コメントアウト ここから
 my $flag = 1;
 for my $e (@exts) {
 	if ($ext eq $e) {
@@ -45,8 +46,9 @@ for my $e (@exts) {
 		last;
 	}
 }
+=cut # ここまで
 
-if ($ext != "mp3") {
+if ($ext ne "mp3") {
 	&super::printCGIHeader("E109", "Invalid extension.", {Extenstion => $ext});
 	exit;
 }
@@ -59,7 +61,7 @@ my $path = &super::getValue($dbh, "Voice" ,[], {LanguageID => $lan_id, LocationI
 
 if ($path eq undef) { # レコードが無いとき
 	#$path = "$super::cavi_dir/$lan_id/Voice/$lct_id.ogg";
-        $path = "$super::cavi_dir/$lan_id/Voice/$lct_id.mp3";
+    $path = "$super::cavi_dir/$lan_id/Voice/$lct_id.mp3";
 
 	$sth = $dbh->prepare("insert into Voice values ('$lan_id', '$lct_id', '" . &super::datetime . "', '$path')"); 
 	$sth->execute;
