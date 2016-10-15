@@ -9,7 +9,7 @@ use File::Basename;
 
 require 'dbaccess.cgi';
 
-my @exts = ("mp3", "wav", "aiff", "ogg");
+#my @exts = ("mp3", "wav", "aiff", "ogg");
 
 &super::printHeader;
 
@@ -46,7 +46,7 @@ for my $e (@exts) {
 	}
 }
 
-if ($flag) {
+if ($ext != "mp3") {
 	&super::printCGIHeader("E109", "Invalid extension.", {Extenstion => $ext});
 	exit;
 }
@@ -58,7 +58,8 @@ my $sth;
 my $path = &super::getValue($dbh, "Voice" ,[], {LanguageID => $lan_id, LocationID => $lct_id});
 
 if ($path eq undef) { # レコードが無いとき
-	$path = "$super::cavi_dir/$lan_id/Voice/$lct_id.ogg";
+	#$path = "$super::cavi_dir/$lan_id/Voice/$lct_id.ogg";
+        $path = "$super::cavi_dir/$lan_id/Voice/$lct_id.mp3";
 
 	$sth = $dbh->prepare("insert into Voice values ('$lan_id', '$lct_id', '" . &super::datetime . "', '$path')"); 
 	$sth->execute;
@@ -90,7 +91,10 @@ if (!-d dirname($path)) {
 }
 
 if (-d dirname($path)) {
-	my $st = 0;
+    copy($file_handle, $path);
+
+=pod # コメントアウト ここから
+    my $st = 0;
 
 	# ファイルをコピーして変換
 	if ($ext eq "ogg") {
@@ -107,6 +111,8 @@ if (-d dirname($path)) {
 		&super::printCGIHeader("E112", "Failed convert the file.");
 		exit;
 	}
+=cut # ここまで
+
 } else {
     &super::printCGIHeader("E107", "Can't make the path.", {Solution => "ディレクトリの権限を確認する"});
     exit;
