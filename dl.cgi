@@ -16,10 +16,7 @@ if (!$filepath) {
     exit;
 }
 
-#$filepath = "/var/www/" . $filepath;
-if ($filepath =~ qq|http://.+?/(.+)|) {
-	$filepath = "/var/www/$1";
-}
+$filepath = "/var/www/" . $filepath;
 
 if ($filepath =~ /\.\./ || $filepath =~ /~/) {
 	&super::printHeader();
